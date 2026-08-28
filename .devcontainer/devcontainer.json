@@ -2,7 +2,8 @@
   "name": "O2C Snowflake — Terraform",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
   "features": {
-    "ghcr.io/devcontainers/features/terraform:1": {}
+    "ghcr.io/devcontainers/features/terraform:1": {},
+    "ghcr.io/devcontainers/features/python:1": {}
   },
-  "postCreateCommand": "bash .devcontainer/setup-tf-key.sh"
+  "postCreateCommand": "bash .devcontainer/setup-tf-key.sh && bash .devcontainer/setup-schemachange.sh"
 }
