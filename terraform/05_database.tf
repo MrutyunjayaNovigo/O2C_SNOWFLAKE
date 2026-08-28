@@ -18,18 +18,18 @@ resource "snowflake_database" "o2c_db" {
 
 resource "snowflake_schema" "master" {
   database = snowflake_database.o2c_db.name
-  name     = "master"
+  name     = "MASTER"
   comment  = "SAP replica, read-only ETL. Standard tables, no HYBRID."
 }
 
 resource "snowflake_schema" "cashapp" {
   database = snowflake_database.o2c_db.name
-  name     = "cashapp"
+  name     = "CASHAPP"
   comment  = "Transactional application schema. HYBRID tables, OLTP workload."
 }
 
 resource "snowflake_schema" "cashapp_authdb" {
   database = snowflake_database.o2c_db.name
-  name     = "cashapp_authdb"
+  name     = "CASHAPP_AUTHDB"
   comment  = "Auth schema. HYBRID tables, OLTP workload."
 }

@@ -20,3 +20,4 @@ terraform/crash.*.log
 
 # schemachange
 .schemachange/
+venv/

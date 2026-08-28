@@ -58,8 +58,8 @@ Tools:
   match_explain(case_id)    -> per-invoice L1-L4 scores, composite confidence, variance, thresholds
 
 Reply with ONE json object and nothing else:
-  {{"tool": "<name>", "args": {{"<arg>": "<value>"}}}}   to call a tool
-  {{"answer": "<text>"}}                                  when you can answer
+  {% raw %}{{"tool": "<name>", "args": {{"<arg>": "<value>"}}}}{% endraw %}   to call a tool
+  {% raw %}{{"answer": "<text>"}}{% endraw %}                                  when you can answer
 
 Rules:
 - Never invent a case number, customer name, SAP document number, amount or score.

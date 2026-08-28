@@ -1,44 +1,42 @@
 # schemachange config — see migrations/README.md for the full how-it-works doc.
 #
-# Tested against schemachange 3.x config schema. schemachange's config keys
-# have shifted across major versions before (this project pins the tool
-# itself in requirements — see migrations/README.md) — if `schemachange
-# --version` reports something outside the 3.x line, diff this file against
-# `schemachange --help` before trusting it as-is.
+# config-version: 2 schema (schemachange >= 4.0) — this repo is pinned to
+# schemachange 4.3.3. The old config-version: 1 flat schema (a nested
+# change-history-table block, top-level snowflake-* keys) doesn't work on
+# this version — as of 4.0 everything lives under a `schemachange:` key,
+# and change-history-table is one dotted string, not a dict. If
+# `schemachange --version` ever reports something outside the 4.x line,
+# diff this file against `schemachange --help` before trusting it as-is.
 
-config-version: 1
+config-version: 2
 
-root-folder: 'migrations'
+schemachange:
+  root-folder: 'migrations'
 
-# Reuses a Snowflake CLI connection (the same `snow` CLI + named connection
-# this repo already uses in 10_copilot/deploy.sh) instead of duplicating
-# account/user/auth here. Create the connection once per account with:
-#   snow connection add <name>
-# then point either env var at it:
-#   export SNOWFLAKE_DEFAULT_CONNECTION_NAME=newacct
-# schemachange >= 3.6 picks this up automatically. If your schemachange
-# version predates connection-name support, delete this block and use the
-# explicit snowflake-account / snowflake-user / snowflake-role fields
-# instead (see migrations/README.md, "Fallback: explicit connection fields").
-connection-name: '{{env_var(''SNOWFLAKE_DEFAULT_CONNECTION_NAME'', ''newacct'')}}'
+  # Reuses a Snowflake CLI connection (the same `snow` CLI + named
+  # connection 10_copilot/deploy.sh already uses) instead of duplicating
+  # account/user/auth here. Create the connection once per account with:
+  #   snow connection add --connection-name newacct ...
+  # then point either env var at it:
+  #   export SNOWFLAKE_DEFAULT_CONNECTION_NAME=newacct
+  # Reads warehouse/database/role from the connection itself
+  # (~/.snowflake/connections.toml) — add those there, not here, so this
+  # file doesn't need a second place to drift out of sync.
+  connection-name: '{{ env_var("SNOWFLAKE_DEFAULT_CONNECTION_NAME", "newacct") }}'
 
-# Deploys always run against the objects Terraform created — see
-# terraform/04_warehouse.tf and terraform/05_database.tf for the source of truth.
-snowflake-warehouse: 'O2C_WH'
-snowflake-role: 'ACCOUNTADMIN'
+  # schemachange creates and owns this table itself on first run (needs
+  # CREATE SCHEMA/TABLE on O2C_DB — ACCOUNTADMIN has it, O2C_APP
+  # deliberately does not, same "runtime role can't create" boundary the
+  # rest of the repo already uses). create-change-history-table must be
+  # explicit in config-version: 2 — it wasn't optional in the old v1
+  # schema, but 4.x defaults it to false.
+  change-history-table: 'O2C_DB.SCHEMACHANGE.CHANGE_HISTORY'
+  create-change-history-table: true
 
-# schemachange creates and owns this table itself on first run (needs CREATE
-# SCHEMA/TABLE on O2C_DB — ACCOUNTADMIN has it, O2C_APP deliberately does not,
-# same "runtime role can't create" boundary the rest of the repo already uses).
-change-history-table:
-  database-name: 'O2C_DB'
-  schema-name: 'SCHEMACHANGE'
-  table-name: 'CHANGE_HISTORY'
-
-# No secrets or environment-specific literals live in migrations/ — those
-# moved to Terraform (terraform/07_network_and_secrets.tf) precisely so nothing
-# sensitive has to pass through Jinja templating here. Left empty
-# deliberately; add entries only if a future migration needs a non-secret,
-# per-environment value (e.g. templating the database name for a second
-# environment in the same account).
-vars: {}
+  # No secrets or environment-specific literals live in migrations/ —
+  # those moved to Terraform (terraform/07_network_and_secrets.tf)
+  # precisely so nothing sensitive has to pass through Jinja templating
+  # here. Left empty deliberately; add entries only if a future migration
+  # needs a non-secret, per-environment value (e.g. templating the
+  # database name for a second environment in the same account).
+  vars: {}
