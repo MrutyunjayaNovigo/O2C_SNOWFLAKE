@@ -3,11 +3,11 @@
 # the copy. This .example file is the only tfvars-shaped file that should
 # ever be in git.
 
-snowflake_organization_name = "myorg"
-snowflake_account_name      = "myaccount"
-snowflake_user              = "TF_DEPLOYER"
+SNOWFLAKE_ORGANIZATION_NAME = "myorg"
+SNOWFLAKE_ACCOUNT_NAME      = "myaccount"
+SNOWFLAKE_USER              = "TF_DEPLOYER"
 snowflake_role              = "ACCOUNTADMIN"
-snowflake_private_key_path  = "/path/to/tf_deployer_key.p8"
+SNOWFLAKE_PRIVATE_KEY_PATH  = "/path/to/tf_deployer_key.p8"
 # snowflake_private_key_passphrase = ""   # only if the key is encrypted
 
 warehouse_name = "O2C_WH"
@@ -15,18 +15,18 @@ warehouse_size = "XSMALL"
 database_name  = "O2C_DB"
 
 runtime_role_name = "O2C_APP"
-runtime_users      = ["O2C_APP_SVC_USER"]
+RUNTIME_USERS      = ["O2C_APP_SVC_USER"]
 
 # ── Gmail OAuth — see terraform/README.md item 1 for how to produce these
 # three values (one-time browser consent, cannot be scripted) ──────────────
-gmail_client_id     = "xxxxx.apps.googleusercontent.com"
-gmail_client_secret = "GOCSPX-xxxxx"
-gmail_refresh_token  = "1//xxxxx"
+GMAIL_CLIENT_ID     = "xxxxx.apps.googleusercontent.com"
+GMAIL_CLIENT_SECRET = "GOCSPX-xxxxx"
+GMAIL_REFRESH_TOKEN  = "1//xxxxx"
 
 # ── Azure Document Intelligence ─────────────────────────────────────────────
-azure_di_endpoint_host = "yourresource.cognitiveservices.azure.com"
-azure_di_api_key       = "xxxxx"
+AZURE_DI_ENDPOINT_HOST = "yourresource.cognitiveservices.azure.com"
+AZURE_DI_API_KEY       = "xxxxx"
 
 # ── Optional, off by default — see 07_network_and_secrets.tf comment ──────
 # create_unused_llm_integration = false
-# groq_api_key                  = ""
+# GROQ_API_KEY                  = ""

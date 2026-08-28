@@ -71,8 +71,8 @@ argument or block, check the resource's page on the Terraform Registry for
 the exact pinned version — the grant resources are the most likely place
 for a mismatch.
 
-**2. Gmail OAuth cannot be scripted.** `gmail_client_id` /
-`gmail_client_secret` / `gmail_refresh_token` (used in
+**2. Gmail OAuth cannot be scripted.** `GMAIL_CLIENT_ID` /
+`GMAIL_CLIENT_SECRET` / `GMAIL_REFRESH_TOKEN` (used in
 `07_network_and_secrets.tf`) come from an interactive browser consent flow,
 same as the original `Email_Prerequisite/Email_capture_prereqs.sql`
 documented:
@@ -99,7 +99,7 @@ Assign the public key to the Terraform deployer user:
 ```sql
 ALTER USER TF_DEPLOYER SET RSA_PUBLIC_KEY = '<contents of tf_deployer_key.pub, minus header/footer lines>';
 ```
-Point `snowflake_private_key_path` in `terraform.tfvars` at
+Point `SNOWFLAKE_PRIVATE_KEY_PATH` in `terraform.tfvars` at
 `tf_deployer_key.p8`. Never commit the `.p8` file — `.gitignore` at the repo
 root already excludes `*.p8`.
 

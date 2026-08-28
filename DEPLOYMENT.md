@@ -24,8 +24,8 @@ pip install schemachange
 ## 1. One-time per new account
 
 **a. Gmail OAuth consent — cannot be scripted, do this first.** Produces the
-three values `terraform.tfvars` needs (`gmail_client_id`,
-`gmail_client_secret`, `gmail_refresh_token`). Full steps in
+three values `terraform.tfvars` needs (`GMAIL_CLIENT_ID`,
+`GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN`). Full steps in
 `terraform/README.md` item 2 — briefly: enable the Gmail API in the target
 GCP project, create a Desktop OAuth client, add the mailbox as a test user
 with the `gmail.readonly` scope, then run `scripts/gmail_oauth_setup.py`

@@ -4,12 +4,12 @@
 # passed to Terraform. See terraform/README.md for the one-time keypair setup.
 
 provider "snowflake" {
-  organization_name = var.snowflake_organization_name
-  account_name       = var.snowflake_account_name
-  user               = var.snowflake_user
+  organization_name = var.SNOWFLAKE_ORGANIZATION_NAME
+  account_name       = var.SNOWFLAKE_ACCOUNT_NAME
+  user               = var.SNOWFLAKE_USER
   role               = var.snowflake_role
 
   authenticator           = "SNOWFLAKE_JWT"
-  private_key             = var.snowflake_private_key_path != "" ? file(var.snowflake_private_key_path) : null
+  private_key             = var.SNOWFLAKE_PRIVATE_KEY_PATH != "" ? file(var.SNOWFLAKE_PRIVATE_KEY_PATH) : null
   private_key_passphrase  = var.snowflake_private_key_passphrase != "" ? var.snowflake_private_key_passphrase : null
 }

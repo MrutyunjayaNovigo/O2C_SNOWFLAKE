@@ -14,7 +14,7 @@ resource "snowflake_account_role" "o2c_app" {
 }
 
 resource "snowflake_grant_account_role" "o2c_app_to_user" {
-  for_each  = toset(var.runtime_users)
+  for_each  = toset(var.RUNTIME_USERS)
   role_name = snowflake_account_role.o2c_app.name
   user_name = each.value
 }

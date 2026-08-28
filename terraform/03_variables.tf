@@ -2,17 +2,17 @@
 # Connection
 # ============================================================
 
-variable "snowflake_organization_name" {
+variable "SNOWFLAKE_ORGANIZATION_NAME" {
   description = "Snowflake organization name (Admin > Accounts in Snowsight)."
   type        = string
 }
 
-variable "snowflake_account_name" {
+variable "SNOWFLAKE_ACCOUNT_NAME" {
   description = "Snowflake account name (not the locator) — the account this stack bootstraps."
   type        = string
 }
 
-variable "snowflake_user" {
+variable "SNOWFLAKE_USER" {
   description = "User Terraform authenticates as. Needs ACCOUNTADMIN or a role with CREATE WAREHOUSE/DATABASE/ROLE/INTEGRATION/SECRET at the account level."
   type        = string
 }
@@ -23,7 +23,7 @@ variable "snowflake_role" {
   default     = "ACCOUNTADMIN"
 }
 
-variable "snowflake_private_key_path" {
+variable "SNOWFLAKE_PRIVATE_KEY_PATH" {
   description = "Path to the PEM private key for key-pair auth (see terraform/README.md setup). Empty string disables key-pair auth (not recommended)."
   type        = string
   default     = ""
@@ -67,7 +67,7 @@ variable "runtime_role_name" {
   default     = "O2C_APP"
 }
 
-variable "runtime_users" {
+variable "RUNTIME_USERS" {
   description = "Snowflake users O2C_APP is granted to — the service user tasks run as, plus any human operators who need it. At least one entry required or tasks/procs have no one to run as."
   type        = list(string)
 }
@@ -77,16 +77,16 @@ variable "runtime_users" {
 # one-time browser consent step that produces these three values)
 # ============================================================
 
-variable "gmail_client_id" {
+variable "GMAIL_CLIENT_ID" {
   type = string
 }
 
-variable "gmail_client_secret" {
+variable "GMAIL_CLIENT_SECRET" {
   type      = string
   sensitive = true
 }
 
-variable "gmail_refresh_token" {
+variable "GMAIL_REFRESH_TOKEN" {
   type      = string
   sensitive = true
 }
@@ -95,12 +95,12 @@ variable "gmail_refresh_token" {
 # Email capture — Azure Document Intelligence
 # ============================================================
 
-variable "azure_di_endpoint_host" {
+variable "AZURE_DI_ENDPOINT_HOST" {
   description = "Host only, e.g. yourresource.cognitiveservices.azure.com (no scheme, no path — used as a HOST_PORT network rule value)."
   type        = string
 }
 
-variable "azure_di_api_key" {
+variable "AZURE_DI_API_KEY" {
   type      = string
   sensitive = true
 }
@@ -116,7 +116,7 @@ variable "create_unused_llm_integration" {
   default = false
 }
 
-variable "groq_api_key" {
+variable "GROQ_API_KEY" {
   type      = string
   sensitive = true
   default   = ""

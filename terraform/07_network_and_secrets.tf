@@ -35,9 +35,9 @@ resource "snowflake_secret_with_generic_string" "gmail_oauth" {
   schema   = "CASHAPP"
 
   secret_string = jsonencode({
-    client_id     = var.gmail_client_id
-    client_secret = var.gmail_client_secret
-    refresh_token = var.gmail_refresh_token
+    client_id     = var.GMAIL_CLIENT_ID
+    client_secret = var.GMAIL_CLIENT_SECRET
+    refresh_token = var.GMAIL_REFRESH_TOKEN
   })
 
   depends_on = [snowflake_schema.cashapp]
@@ -60,7 +60,7 @@ resource "snowflake_network_rule" "azure_di" {
 
   mode       = "EGRESS"
   type       = "HOST_PORT"
-  value_list = ["${var.azure_di_endpoint_host}:443"]
+  value_list = ["${var.AZURE_DI_ENDPOINT_HOST}:443"]
 
   depends_on = [snowflake_schema.cashapp]
 }
@@ -69,7 +69,7 @@ resource "snowflake_secret_with_generic_string" "azure_di" {
   name          = "SEC_AZURE_DI_KEY"
   database      = snowflake_database.o2c_db.name
   schema        = "CASHAPP"
-  secret_string = var.azure_di_api_key
+  secret_string = var.AZURE_DI_API_KEY
 
   depends_on = [snowflake_schema.cashapp]
 }
@@ -106,7 +106,7 @@ resource "snowflake_secret_with_generic_string" "llm_api_key" {
   name          = "SEC_LLM_API_KEY"
   database      = snowflake_database.o2c_db.name
   schema        = "CASHAPP"
-  secret_string = var.groq_api_key
+  secret_string = var.GROQ_API_KEY
 
   depends_on = [snowflake_schema.cashapp]
 }

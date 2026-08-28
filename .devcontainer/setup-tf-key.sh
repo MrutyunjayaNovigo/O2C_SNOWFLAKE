@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Materializes the Snowflake TF deployer private key from the
 # SNOWFLAKE_TF_PRIVATE_KEY_B64 Codespaces secret onto disk, since Terraform's
-# snowflake_private_key_path variable needs a real file path, not env content.
+# SNOWFLAKE_PRIVATE_KEY_PATH variable needs a real file path, not env content.
 # No-ops if the secret isn't set (e.g. running outside Codespaces).
 set -euo pipefail
 
