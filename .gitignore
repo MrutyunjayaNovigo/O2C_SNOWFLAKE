@@ -1,0 +1,21 @@
+# Terraform
+# (.terraform.lock.hcl is intentionally NOT ignored — commit it, it pins
+# exact provider versions/checksums so `terraform init` is reproducible)
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/terraform.tfvars
+terraform/*.auto.tfvars
+terraform/crash.log
+terraform/crash.*.log
+
+# Key material / secrets — nothing under these names should ever be committed
+*.p8
+*.pem
+*_key.json
+.env
+.env.*
+!.env.example
+
+# schemachange
+.schemachange/
