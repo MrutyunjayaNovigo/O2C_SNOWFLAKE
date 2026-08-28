@@ -47,8 +47,11 @@ resource "snowflake_external_access_integration" "gmail_api" {
   name    = "EAI_GMAIL_API"
   enabled = true
 
-  allowed_network_rules          = ["\"${snowflake_database.o2c_db.name}\".\"CASHAPP\".\"${snowflake_network_rule.gmail_api.name}\""]
-  allowed_authentication_secrets = ["\"${snowflake_database.o2c_db.name}\".\"CASHAPP\".\"${snowflake_secret_with_generic_string.gmail_oauth.name}\""]
+  allowed_network_rules = ["\"${snowflake_database.o2c_db.name}\".\"CASHAPP\".\"${snowflake_network_rule.gmail_api.name}\""]
+
+  allowed_authentication_secrets {
+    secrets = ["\"${snowflake_database.o2c_db.name}\".\"CASHAPP\".\"${snowflake_secret_with_generic_string.gmail_oauth.name}\""]
+  }
 }
 
 # ── 2. Azure Document Intelligence egress ───────────────────────────────────
@@ -78,8 +81,11 @@ resource "snowflake_external_access_integration" "azure_di" {
   name    = "EAI_AZURE_DI"
   enabled = true
 
-  allowed_network_rules          = ["\"${snowflake_database.o2c_db.name}\".\"CASHAPP\".\"${snowflake_network_rule.azure_di.name}\""]
-  allowed_authentication_secrets = ["\"${snowflake_database.o2c_db.name}\".\"CASHAPP\".\"${snowflake_secret_with_generic_string.azure_di.name}\""]
+  allowed_network_rules = ["\"${snowflake_database.o2c_db.name}\".\"CASHAPP\".\"${snowflake_network_rule.azure_di.name}\""]
+
+  allowed_authentication_secrets {
+    secrets = ["\"${snowflake_database.o2c_db.name}\".\"CASHAPP\".\"${snowflake_secret_with_generic_string.azure_di.name}\""]
+  }
 }
 
 # ── 3. External LLM API egress — off by default, matches the source file's
@@ -116,6 +122,9 @@ resource "snowflake_external_access_integration" "llm_api" {
   name    = "EAI_LLM_API"
   enabled = true
 
-  allowed_network_rules          = ["\"${snowflake_database.o2c_db.name}\".\"CASHAPP\".\"${snowflake_network_rule.llm_api[0].name}\""]
-  allowed_authentication_secrets = ["\"${snowflake_database.o2c_db.name}\".\"CASHAPP\".\"${snowflake_secret_with_generic_string.llm_api_key[0].name}\""]
+  allowed_network_rules = ["\"${snowflake_database.o2c_db.name}\".\"CASHAPP\".\"${snowflake_network_rule.llm_api[0].name}\""]
+
+  allowed_authentication_secrets {
+    secrets = ["\"${snowflake_database.o2c_db.name}\".\"CASHAPP\".\"${snowflake_secret_with_generic_string.llm_api_key[0].name}\""]
+  }
 }
