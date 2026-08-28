@@ -12,6 +12,7 @@ terraform/crash.*.log
 # Key material / secrets — nothing under these names should ever be committed
 *.p8
 *.pem
+*.pub
 *_key.json
 .env
 .env.*
