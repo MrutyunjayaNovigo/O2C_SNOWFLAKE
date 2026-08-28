@@ -40,9 +40,8 @@ resource "snowflake_grant_privileges_to_account_role" "o2c_app_database_usage" {
 resource "snowflake_grant_privileges_to_account_role" "o2c_app_cashapp_schema_usage" {
   account_role_name = snowflake_account_role.o2c_app.name
   privileges         = ["USAGE"]
-  on_schema_object {
-    object_type = "SCHEMA"
-    object_name = "\"${snowflake_database.o2c_db.name}\".\"${snowflake_schema.cashapp.name}\""
+  on_schema {
+    schema_name = "\"${snowflake_database.o2c_db.name}\".\"${snowflake_schema.cashapp.name}\""
   }
 }
 
