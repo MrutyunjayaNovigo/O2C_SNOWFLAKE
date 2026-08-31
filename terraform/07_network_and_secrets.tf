@@ -44,6 +44,7 @@ resource "snowflake_secret_with_generic_string" "gmail_oauth" {
 }
 
 resource "snowflake_external_access_integration" "gmail_api" {
+  count   = var.create_external_access_integrations ? 1 : 0
   name    = "EAI_GMAIL_API"
   enabled = true
 
@@ -78,6 +79,7 @@ resource "snowflake_secret_with_generic_string" "azure_di" {
 }
 
 resource "snowflake_external_access_integration" "azure_di" {
+  count   = var.create_external_access_integrations ? 1 : 0
   name    = "EAI_AZURE_DI"
   enabled = true
 

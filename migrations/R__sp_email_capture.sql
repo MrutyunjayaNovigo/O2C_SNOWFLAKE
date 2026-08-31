@@ -40,6 +40,16 @@
 USE DATABASE O2C_DB;
 USE SCHEMA cashapp;
 
+-- email_capture_enabled (schemachange-config.yml vars, default false) —
+-- this procedure's EXTERNAL_ACCESS_INTEGRATIONS = (eai_gmail_api,
+-- eai_azure_di) clause is validated by Snowflake at CREATE PROCEDURE time,
+-- and those two integrations don't exist on a trial account (see
+-- terraform/README.md, "Trial accounts and external access integrations").
+-- Jinja-gated here so this one file can't block every other migration —
+-- schemachange checksums the RENDERED content, so flipping the var and
+-- re-deploying picks this up automatically once Terraform creates the
+-- integrations for real.
+{% if email_capture_enabled %}
 CREATE OR REPLACE PROCEDURE O2C_DB.cashapp.sp_capture_email()
 RETURNS VARIANT
 LANGUAGE PYTHON
@@ -798,4 +808,10 @@ def run(session):
 
     return {"processed": len(emails), "captured": captured, "skipped": skipped, "errors": errors}
 $$;
+{% else %}
+SELECT 'SKIPPED sp_capture_email — eai_gmail_api/eai_azure_di do not exist yet '
+    || '(Snowflake trial account cannot create external access integrations). '
+    || 'Run terraform apply -var="create_external_access_integrations=true", then '
+    || 'set email_capture_enabled: true in schemachange-config.yml and re-deploy.' AS status;
+{% endif %}
 

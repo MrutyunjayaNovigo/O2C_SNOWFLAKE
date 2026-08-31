@@ -21,7 +21,7 @@ resource "snowflake_grant_account_role" "o2c_app_to_user" {
 
 resource "snowflake_grant_privileges_to_account_role" "o2c_app_warehouse_usage" {
   account_role_name = snowflake_account_role.o2c_app.name
-  privileges         = ["USAGE"]
+  privileges        = ["USAGE"]
   on_account_object {
     object_type = "WAREHOUSE"
     object_name = snowflake_warehouse.o2c_wh.name
@@ -30,7 +30,7 @@ resource "snowflake_grant_privileges_to_account_role" "o2c_app_warehouse_usage" 
 
 resource "snowflake_grant_privileges_to_account_role" "o2c_app_database_usage" {
   account_role_name = snowflake_account_role.o2c_app.name
-  privileges         = ["USAGE"]
+  privileges        = ["USAGE"]
   on_account_object {
     object_type = "DATABASE"
     object_name = snowflake_database.o2c_db.name
@@ -39,7 +39,7 @@ resource "snowflake_grant_privileges_to_account_role" "o2c_app_database_usage" {
 
 resource "snowflake_grant_privileges_to_account_role" "o2c_app_cashapp_schema_usage" {
   account_role_name = snowflake_account_role.o2c_app.name
-  privileges         = ["USAGE"]
+  privileges        = ["USAGE"]
   on_schema {
     schema_name = "\"${snowflake_database.o2c_db.name}\".\"${snowflake_schema.cashapp.name}\""
   }
@@ -57,11 +57,11 @@ resource "snowflake_grant_privileges_to_account_role" "o2c_app_cashapp_schema_us
 # just made the default instead of a per-table bolt-on.
 resource "snowflake_grant_privileges_to_account_role" "o2c_app_cashapp_future_tables" {
   account_role_name = snowflake_account_role.o2c_app.name
-  privileges         = ["SELECT", "INSERT"]
+  privileges        = ["SELECT", "INSERT"]
   on_schema_object {
     future {
       object_type_plural = "TABLES"
-      in_schema           = "\"${snowflake_database.o2c_db.name}\".\"${snowflake_schema.cashapp.name}\""
+      in_schema          = "\"${snowflake_database.o2c_db.name}\".\"${snowflake_schema.cashapp.name}\""
     }
   }
 }
