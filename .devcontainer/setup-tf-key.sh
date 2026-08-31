@@ -16,3 +16,26 @@ if [ -n "${SNOWFLAKE_TF_PRIVATE_KEY_PEM:-}" ]; then
 else
   echo "SNOWFLAKE_TF_PRIVATE_KEY_PEM not set — skipping key materialization."
 fi
+
+# HCP Terraform auth (remote state backend, 01_versions.tf's cloud block).
+# Written as a credentials file rather than relying on the
+# TF_TOKEN_app_terraform_io env var directly — Codespaces force-uppercases
+# secret names, which would turn that into TF_TOKEN_APP_TERRAFORM_IO and
+# Terraform wouldn't recognize it. The TF_API_TOKEN secret's name can be
+# anything; only the file content below needs the exact casing.
+if [ -n "${TF_API_TOKEN:-}" ]; then
+  mkdir -p "$HOME/.terraform.d"
+  cat > "$HOME/.terraform.d/credentials.tfrc.json" << EOF
+{
+  "credentials": {
+    "app.terraform.io": {
+      "token": "$TF_API_TOKEN"
+    }
+  }
+}
+EOF
+  chmod 600 "$HOME/.terraform.d/credentials.tfrc.json"
+  echo "Wrote $HOME/.terraform.d/credentials.tfrc.json"
+else
+  echo "TF_API_TOKEN not set — skipping HCP Terraform auth."
+fi

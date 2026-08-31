@@ -47,6 +47,8 @@ jobs:
           chmod 600 /tmp/tf_deployer_key.p8
 
       - uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - run: terraform init
       - run: terraform apply -auto-approve

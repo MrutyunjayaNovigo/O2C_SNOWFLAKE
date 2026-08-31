@@ -21,9 +21,19 @@ terraform {
     }
   }
 
-  # Local state by default — fine for one operator bootstrapping one account.
-  # If more than one person/pipeline will run this, switch to a remote
-  # backend (e.g. an S3/GCS bucket or Snowflake-external backend) BEFORE the
-  # first apply — moving state after the fact is extra, avoidable work.
-  # backend "s3" {}
+  # HCP Terraform as a pure state backend — Execution Mode is set to Local
+  # on the workspace, so `terraform apply` still runs from GitHub Actions /
+  # a local terminal, not HCP Terraform's own runners. This only replaces
+  # local state with remote state + locking, so both you and CI see the
+  # same state instead of each starting from empty and colliding with
+  # objects the other already created. Auth: set TF_TOKEN_app_terraform_io
+  # (dots -> underscores is Terraform's own convention for this env var
+  # name) rather than committing a credentials file anywhere.
+  cloud {
+    organization = "snowflake-terraform-mj"
+
+    workspaces {
+      name = "o2c-snowflake"
+    }
+  }
 }
