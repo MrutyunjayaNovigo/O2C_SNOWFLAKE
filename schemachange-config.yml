@@ -36,7 +36,15 @@ schemachange:
   # No secrets or environment-specific literals live in migrations/ —
   # those moved to Terraform (terraform/07_network_and_secrets.tf)
   # precisely so nothing sensitive has to pass through Jinja templating
-  # here. Left empty deliberately; add entries only if a future migration
-  # needs a non-secret, per-environment value (e.g. templating the
-  # database name for a second environment in the same account).
-  vars: {}
+  # here. vars is otherwise empty deliberately; add entries only if a
+  # future migration needs a non-secret, per-environment value.
+  #
+  # email_capture_enabled: gates R__sp_email_capture.sql's CREATE
+  # PROCEDURE — that file's EXTERNAL_ACCESS_INTEGRATIONS clause needs
+  # eai_gmail_api/eai_azure_di, which don't exist until Terraform's
+  # create_external_access_integrations = true (trial accounts can't
+  # create them at all — see terraform/README.md). schemachange checksums
+  # rendered content, so flipping this to true and re-deploying picks up
+  # the real procedure automatically, no other change needed.
+  vars:
+    email_capture_enabled: false

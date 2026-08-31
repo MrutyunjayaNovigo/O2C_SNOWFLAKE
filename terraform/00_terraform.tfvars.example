@@ -30,3 +30,7 @@ AZURE_DI_API_KEY       = "xxxxx"
 # ── Optional, off by default — see 07_network_and_secrets.tf comment ──────
 # create_unused_llm_integration = false
 # GROQ_API_KEY                  = ""
+
+# ── Off by default — trial accounts can't create these (see
+# 03_variables.tf). Flip to true once the account is upgraded ───────────────
+# create_external_access_integrations = false

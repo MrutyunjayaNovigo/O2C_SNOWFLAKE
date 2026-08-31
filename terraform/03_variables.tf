@@ -116,6 +116,20 @@ variable "create_unused_llm_integration" {
   default = false
 }
 
+# ============================================================
+# Off by default — Snowflake trial accounts can't create External Access
+# Integrations at all ("External access is not supported for trial
+# accounts"). The network rules and secrets they depend on still get
+# created unconditionally; only the two EAI resources themselves wait on
+# this flag. Flip to true (and re-run apply) once the account is upgraded
+# off trial — see terraform/README.md.
+# ============================================================
+
+variable "create_external_access_integrations" {
+  type    = bool
+  default = false
+}
+
 variable "GROQ_API_KEY" {
   type      = string
   sensitive = true

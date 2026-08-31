@@ -137,6 +137,50 @@ rule.
 before — its `CREATE SCHEMA IF NOT EXISTS` statements land on schemas that
 already exist and no-op harmlessly.
 
+## Trial accounts and external access integrations
+
+Snowflake trial accounts cannot create External Access Integrations at all —
+`terraform apply` fails on `EAI_GMAIL_API` / `EAI_AZURE_DI` specifically with
+`External access is not supported for trial accounts`, even though every
+other resource in this stack (warehouse, database, schemas, role, grants,
+the network rules, and the secrets themselves) applies fine.
+
+`create_external_access_integrations` (`03_variables.tf`, default `false`)
+exists so this doesn't block everything else or make `apply`/`plan` fail
+repeatedly (including in CI — see `../.github/workflows/deploy.yml`). While
+it's off:
+
+- The two `snowflake_external_access_integration` resources in
+  `07_network_and_secrets.tf` are skipped (`count = 0`).
+- Everything else in that file — `NR_GMAIL_API`, `NR_AZURE_DI`,
+  `SEC_GMAIL_OAUTH`, `SEC_AZURE_DI_KEY` — still gets created normally.
+- The `external_access_integrations` output (`08_outputs.tf`) returns `{}`
+  instead of erroring.
+- `migrations/R__sp_email_capture.sql` has the matching guard on the
+  schemachange side — its own `EXTERNAL_ACCESS_INTEGRATIONS = (eai_gmail_api,
+  eai_azure_di)` clause would otherwise fail `CREATE PROCEDURE` outright,
+  since Snowflake validates that reference exists immediately. It's
+  Jinja-gated behind `email_capture_enabled` (`schemachange-config.yml`
+  vars, also default `false`) — while off, `schemachange deploy` runs a
+  harmless placeholder `SELECT` there instead of failing. Every other
+  migration file is unaffected.
+
+Once the account is upgraded off trial, flip **both** switches and re-run
+both tools — each skips everything already in place and only adds what's
+missing:
+
+```bash
+terraform apply -var="create_external_access_integrations=true"
+```
+then set `email_capture_enabled: true` in `schemachange-config.yml`'s
+`vars:` block and run `schemachange deploy` again — schemachange checksums
+the *rendered* content, so that one var flip is enough to make it pick up
+the real procedure body next run.
+
+`TF_VAR_create_external_access_integrations=true` can also be set as a
+Codespaces / GitHub Actions secret so Terraform's side is picked up
+automatically without the `-var` flag.
+
 ## Verifying
 
 ```sql
