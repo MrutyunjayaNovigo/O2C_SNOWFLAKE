@@ -5,13 +5,13 @@
 
 provider "snowflake" {
   organization_name = var.SNOWFLAKE_ORGANIZATION_NAME
-  account_name       = var.SNOWFLAKE_ACCOUNT_NAME
-  user               = var.SNOWFLAKE_USER
-  role               = var.snowflake_role
+  account_name      = var.SNOWFLAKE_ACCOUNT_NAME
+  user              = var.SNOWFLAKE_USER
+  role              = var.snowflake_role
 
-  authenticator           = "SNOWFLAKE_JWT"
-  private_key             = var.SNOWFLAKE_PRIVATE_KEY_PATH != "" ? file(var.SNOWFLAKE_PRIVATE_KEY_PATH) : null
-  private_key_passphrase  = var.snowflake_private_key_passphrase != "" ? var.snowflake_private_key_passphrase : null
+  authenticator          = "SNOWFLAKE_JWT"
+  private_key            = var.SNOWFLAKE_PRIVATE_KEY_PATH != "" ? file(var.SNOWFLAKE_PRIVATE_KEY_PATH) : null
+  private_key_passphrase = var.snowflake_private_key_passphrase != "" ? var.snowflake_private_key_passphrase : null
 
   # snowflake_external_access_integration is a preview feature as of the
   # provider version pinned in 01_versions.tf (>= 2.20.0) — without this, the
