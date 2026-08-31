@@ -57,6 +57,11 @@ jobs:
     needs: terraform-apply
     env:
       SNOWFLAKE_DEFAULT_CONNECTION_NAME: newacct
+      # snow CLI's default config dir differs by OS/state — Linux runners with
+      # no pre-existing ~/.snowflake fall back to XDG's ~/.config/snowflake,
+      # while schemachange always looks in ~/.snowflake/connections.toml.
+      # Forcing SNOWFLAKE_HOME pins both tools to the same explicit path.
+      SNOWFLAKE_HOME: /home/runner/.snowflake
     steps:
       - uses: actions/checkout@v4
 
