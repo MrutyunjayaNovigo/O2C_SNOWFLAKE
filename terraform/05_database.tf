@@ -17,19 +17,22 @@ resource "snowflake_database" "o2c_db" {
 }
 
 resource "snowflake_schema" "master" {
-  database = snowflake_database.o2c_db.name
-  name     = "MASTER"
-  comment  = "SAP replica, read-only ETL. Standard tables, no HYBRID."
+  database     = snowflake_database.o2c_db.name
+  name         = "MASTER"
+  comment      = "SAP replica, read-only ETL. Standard tables, no HYBRID."
+  is_transient = false
 }
 
 resource "snowflake_schema" "cashapp" {
-  database = snowflake_database.o2c_db.name
-  name     = "CASHAPP"
-  comment  = "Transactional application schema. HYBRID tables, OLTP workload."
+  database     = snowflake_database.o2c_db.name
+  name         = "CASHAPP"
+  comment      = "Transactional application schema. HYBRID tables, OLTP workload."
+  is_transient = false
 }
 
 resource "snowflake_schema" "cashapp_authdb" {
-  database = snowflake_database.o2c_db.name
-  name     = "CASHAPP_AUTHDB"
-  comment  = "Auth schema. HYBRID tables, OLTP workload."
+  database     = snowflake_database.o2c_db.name
+  name         = "CASHAPP_AUTHDB"
+  comment      = "Auth schema. HYBRID tables, OLTP workload."
+  is_transient = false
 }
