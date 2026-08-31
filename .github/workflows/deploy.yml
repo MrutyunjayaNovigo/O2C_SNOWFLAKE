@@ -57,11 +57,6 @@ jobs:
     needs: terraform-apply
     env:
       SNOWFLAKE_DEFAULT_CONNECTION_NAME: newacct
-      # snow CLI's default config dir differs by OS/state — Linux runners with
-      # no pre-existing ~/.snowflake fall back to XDG's ~/.config/snowflake,
-      # while schemachange always looks in ~/.snowflake/connections.toml.
-      # Forcing SNOWFLAKE_HOME pins both tools to the same explicit path.
-      SNOWFLAKE_HOME: /home/runner/.snowflake
     steps:
       - uses: actions/checkout@v4
 
@@ -78,17 +73,26 @@ jobs:
           KEYEOF
           chmod 600 /tmp/tf_deployer_key.p8
 
-      - name: Register snow CLI connection
+      - name: Write connections.toml
+        # Writing this by hand instead of via `snow connection add` — the
+        # CLI's default write location differs by OS/state (XDG path on a
+        # fresh Linux runner with no pre-existing ~/.snowflake dir vs.
+        # SNOWFLAKE_HOME being interpreted differently by schemachange
+        # itself), so relying on its auto-detection kept landing schemachange
+        # and snow CLI on two different files. schemachange's own default
+        # lookup (~/.snowflake/connections.toml) is the one fixed target here.
         run: |
-          snow connection add \
-            --connection-name newacct \
-            --account "${{ secrets.SNOWFLAKE_ORGANIZATION_NAME }}-${{ secrets.SNOWFLAKE_ACCOUNT_NAME }}" \
-            --user "${{ secrets.SNOWFLAKE_USER }}" \
-            --authenticator SNOWFLAKE_JWT \
-            --private-key-file /tmp/tf_deployer_key.p8 \
-            --role ACCOUNTADMIN \
-            --warehouse O2C_WH \
-            --database O2C_DB \
-            --no-interactive
+          mkdir -p "$HOME/.snowflake"
+          cat > "$HOME/.snowflake/connections.toml" << EOF
+          [newacct]
+          account = "${{ secrets.SNOWFLAKE_ORGANIZATION_NAME }}-${{ secrets.SNOWFLAKE_ACCOUNT_NAME }}"
+          user = "${{ secrets.SNOWFLAKE_USER }}"
+          role = "ACCOUNTADMIN"
+          warehouse = "O2C_WH"
+          database = "O2C_DB"
+          authenticator = "SNOWFLAKE_JWT"
+          private_key_file = "/tmp/tf_deployer_key.p8"
+          EOF
+          chmod 600 "$HOME/.snowflake/connections.toml"
 
       - run: schemachange deploy --config-folder .
