@@ -13,8 +13,7 @@ config-version: 2
 schemachange:
   root-folder: 'migrations'
 
-  # Reuses a Snowflake CLI connection (the same `snow` CLI + named
-  # connection 10_copilot/deploy.sh already uses) instead of duplicating
+  # Reuses a named Snowflake CLI connection instead of duplicating
   # account/user/auth here. Create the connection once per account with:
   #   snow connection add --connection-name newacct ...
   # then point either env var at it:

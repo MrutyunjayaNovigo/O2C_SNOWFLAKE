@@ -1,9 +1,17 @@
 # Offline harness: exec the procedure body against a stubbed Snowpark session
 # and drive the loop through its real paths. Proves control flow, JSON
 # extraction, the tool allow-list and the repair branch without a warehouse.
+#
+# Reads migrations/R__sp_copilot_ask.sql — the schemachange-deployed source
+# of truth — not the old 10_copilot/ copy that migrations/ superseded.
+# {% raw %}/{% endraw %} tags are stripped before exec since this reads the
+# file directly rather than through schemachange's Jinja renderer, which
+# would otherwise strip them itself; the content between the tags is
+# untouched either way, so this exactly mirrors what actually gets deployed.
 import io, json, re
 
-body = io.open('10_copilot/Procedure_CopilotAsk.sql', encoding='utf-8').read().split('$$')[1]
+body = io.open('migrations/R__sp_copilot_ask.sql', encoding='utf-8').read().split('$$')[1]
+body = body.replace('{% raw %}', '').replace('{% endraw %}', '')
 mod = {}
 exec(compile(body, 'proc', 'exec'), mod)
 

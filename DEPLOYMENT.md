@@ -97,9 +97,14 @@ that's almost certainly it, not a deploy problem.
 
 - Manually opening and running ~30 `.sql` files in the right order by hand.
 - `10_copilot/deploy.sh`, which did the same thing schemachange now does,
-  but only for `10_copilot/`'s 4 files. It still works standalone and
-  nothing here deletes it, but `schemachange deploy` now covers that same
-  ground as part of the full pipeline — no need to run both.
+  but only for 4 files. `schemachange deploy` fully covers that same ground
+  as part of the full pipeline now, so once it was proven working (dry-run
+  validated, all 27 procedures deploy cleanly), the original numbered
+  folders (`01_initial_script/` through `10_copilot/`, `Email_Prerequisite/`)
+  and `deploy.sh` were removed — `migrations/` had made them a second,
+  driftable copy of the same content rather than an active deploy path.
+  Full history is still in git; the "Was:" column in `migrations/README.md`
+  maps every `V`/`R` file back to what it replaced.
 
 ## What this does NOT fix
 
