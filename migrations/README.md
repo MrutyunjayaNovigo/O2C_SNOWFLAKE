@@ -2,11 +2,14 @@
 
 ## What's here
 
-Every file in this folder is a **copy** of a file that already existed
+Every file in this folder started as a **copy** of a file that used to live
 elsewhere in the repo (`01_initial_script/`, `02_capture/`, ... `10_copilot/`,
-`Email_Prerequisite/`), renamed to schemachange's naming convention. The
-original numbered folders are untouched — this is additive, not a rewrite.
-Content is unchanged except for `V1.1` (warehouse/database creation lines
+`Email_Prerequisite/`), renamed to schemachange's naming convention. Those
+original numbered folders were additive at first — kept alongside this one
+while the migration was unproven — and removed once `migrations/` was
+confirmed as the actual deploy path (see `../DEPLOYMENT.md`, "What this
+replaces"); keeping both meant an edit to one could silently never reach the
+other. Content is unchanged from the originals except for `V1.1` (warehouse/database creation lines
 removed — Terraform owns those now, see `../terraform/README.md`) and
 `V2.1` (a new file — it's the schema-owned half of
 `Email_capture_prereqs.sql`, split out from the half that became Terraform).
@@ -49,8 +52,7 @@ procedures (see below).
 **`R__<description>.sql`** — repeatable, runs **every deploy** if its
 content changed since last time (schemachange tracks a checksum), always
 after every pending `V` file. This is every `CREATE OR REPLACE PROCEDURE`
-file in the repo — 26 of them, one per source file, listed at the bottom of
-this doc. Re-running a `CREATE OR REPLACE PROCEDURE` is exactly what you
+file in the repo — 27 of them, one per source file. Re-running a `CREATE OR REPLACE PROCEDURE` is exactly what you
 want on every deploy: it's how procedure code changes ship. There's no
 dependency ordering to worry about between them — every `CALL` inside a
 procedure body resolves at runtime, not at creation time, so it doesn't
@@ -58,10 +60,14 @@ matter which `R__` file runs first.
 
 ## What's deliberately NOT here
 
-`05_postguard/Check_Postguard_Results.sql` was not copied — it's a
+`05_postguard/Check_Postguard_Results.sql` was never copied here — it's a
 diagnostic query file with a literal `'<case_id>'` placeholder, meant to be
-opened and edited by a human investigating one case, not deployed. It stays
-in `05_postguard/` as-is; there's nothing to automate here.
+opened and edited by a human investigating one case, not deployed. There's
+nothing to automate, so unlike the rest of the original numbered folders
+(removed once migrations/ was proven as the real deploy path — see
+`../DEPLOYMENT.md`, "What this replaces"), this one had no `migrations/`
+counterpart to make it redundant. It's gone from the repo entirely now;
+recover it from git history if you need that exact query again.
 
 ## Why the role split looks like this
 
@@ -86,8 +92,7 @@ stops that from happening again on a new account.
 
 ```bash
 pip install schemachange
-snow connection add newacct        # one-time per account — same `snow` CLI
-                                    # connection 10_copilot/deploy.sh already uses
+snow connection add newacct        # one-time per account
 export SNOWFLAKE_DEFAULT_CONNECTION_NAME=newacct
 ```
 
